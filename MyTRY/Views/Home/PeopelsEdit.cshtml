@@ -1,0 +1,28 @@
+﻿@model MvcSql.Domain.People
+
+<div class="text-center">
+    <h1>Редактировать информацию о пользователе</h1>
+    <div>
+        <form asp-controller="Home" asp-action="PeopelsEdit" method="post">
+            <input type="hidden" asp-for="Id" />
+            <div asp-validation-summary="All"></div>
+
+            <div>
+                <label asp-for="FIO"></label>
+                <input asp-for="FIO" />
+                <span asp-validation-for="FIO"></span>
+            </div>
+            <div>
+                <label asp-for="Data"></label>
+                <textarea asp-for="Data"></textarea>
+                <span asp-validation-for="Data"></span>
+            </div>
+            <div>
+                <label asp-for="Number"></label>
+                <textarea asp-for="Number"></textarea>
+                <span asp-validation-for="Number"></span>
+            </div>
+            <input type="submit" value="Готово" />
+        </form>
+    </div>
+</div>

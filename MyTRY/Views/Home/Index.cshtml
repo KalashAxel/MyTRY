@@ -1,0 +1,91 @@
+﻿@using MvcSql.Domain
+@model IQueryable<MvcSql.Domain.People>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <a asp-controller="Home" asp-action="PeopelsEdit">Новый пользователь  </a>
+    <a asp-controller="Home" asp-action="PeopelsSearch">  Поиск пользователя</a>
+</div>
+
+
+
+<div class="container">
+    <b>Search By FIO: </b>
+    @Html.TextBox("Search")<input type="submit" id="SearchBtn" value="Search" /><br /><br />
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>FIO</th>
+                <th>Data</th>
+                <th>Number</th>
+            </tr>
+        </thead>
+        <tbody id="DataSearching">
+            @foreach (var Item in Model)
+            {
+                <tr>
+                    <td>@Item.FIO</td>
+                    <td>@Item.Data</td>
+                    <td>@Item.Number</td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+<div class="text-center">
+    @foreach (People entity in Model)
+    {
+        <div>
+            @entity.FIO
+            |
+            @entity.Data
+            |
+            @entity.Number
+            |
+            <a asp-controller="Home" asp-action="PeopelsEdit" asp-route-id="@entity.Id">редактировать</a>
+            |
+            <form method="post" asp-controller="Home" asp-action="PeopelsDelete">
+                <input type="hidden" value="@entity.Id" name="Id" />
+                <input type="submit" value="удалить" />
+            </form>
+        </div>
+    }
+</div>
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#SearchBtn").click(function () {
+            var SearchBy = $("#SearchBy").val();
+            var SearchValue = $("#Search").val();
+            var SetData = $("#DataSearching");
+            SetData.html("");
+            $.ajax({
+                type: "post",
+                url: "/Home/GetSearchingData?SearchBy=" + SearchBy + "&SearchValue=" + SearchValue,
+                contentType: "html",
+                success: function (result) {
+                    if (result.length == 0) {
+                        SetData.append('<tr style="color:red"><td colspan="3">No Match Data</td></tr>')
+                    }
+                    else {
+                        $.each(result, function (index, value) {
+                            var Data = "<tr>" +
+                                "<td>" + value.StuId + "</td>" +
+                                "<td>" + value.StuName + "</td>" +
+                                "<td>" + value.Semester + "</td>" +
+                                "</tr>";
+                            SetData.append(Data);
+
+                        });
+                    }
+                }
+            });
+        });
+    });
+</script>
+
